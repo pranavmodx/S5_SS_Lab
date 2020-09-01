@@ -128,15 +128,14 @@ bool UFD::file_exists(string file_name)
 
     if (file_count > 0)
     {
-        while (fp_start)
+        while (fp)
         {
-            if (fp_start->name.compare(file_name) == 0)
+            if (fp->name.compare(file_name) == 0)
                 return true;
-            fp_start = fp_start->next;
+            fp = fp->next;
         }
     }
 
-    fp_start = fp;
     return false;
 }
 
@@ -196,16 +195,16 @@ void UFD::rm()
     int found = 0;
 
     File *temp;
-    while (fp_start)
+    while (fp)
     {
-        if (fp_start->name.compare(file_name) == 0)
+        if (fp->name.compare(file_name) == 0)
         {
             found = 1;
             file_count--;
-            temp = fp_start;
+            temp = fp;
             cout << "File removed successfully!" << endl;
         }
-        fp_start = fp_start->next;
+        fp = fp->next;
     }
     if (!found)
         cout << "No file of that name exists" << endl;
@@ -224,12 +223,11 @@ void UFD::ls()
         return;
     }
     File *fp = fp_start;
-    while (fp_start)
+    while (fp)
     {
-        cout << fp_start->name << endl;
-        fp_start = fp_start->next;
+        cout << fp->name << endl;
+        fp = fp->next;
     }
-    fp_start = fp;
 }
 
 void UFD::ls_la()
@@ -240,12 +238,11 @@ void UFD::ls_la()
         return;
     }
     File *fp = fp_start;
-    while (fp_start)
+    while (fp)
     {
-        cout << fp_start->name << "  --  " << fp_start->size << "kb" << endl;
-        fp_start = fp_start->next;
+        cout << fp->name << "  --  " << fp->size << "kb" << endl;
+        fp = fp->next;
     }
-    fp_start = fp;
 }
 
 void show_MFD_options()

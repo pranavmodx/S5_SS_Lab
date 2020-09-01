@@ -142,15 +142,14 @@ bool Directory::file_exists(string file_name)
 
     if (file_count > 0)
     {
-        while (fp_start)
+        while (fp)
         {
-            if (fp_start->name.compare(file_name) == 0)
+            if (fp->name.compare(file_name) == 0)
                 return true;
-            fp_start = fp_start->next;
+            fp = fp->next;
         }
     }
 
-    fp_start = fp;
     return false;
 }
 
@@ -209,16 +208,16 @@ void Directory::rm()
     int found = 0;
 
     File *temp;
-    while (fp_start)
+    while (fp)
     {
-        if (fp_start->name.compare(file_name) == 0)
+        if (fp->name.compare(file_name) == 0)
         {
             found = 1;
             file_count--;
-            temp = fp_start;
+            temp = fp;
             cout << "File removed successfully!" << endl;
         }
-        fp_start = fp_start->next;
+        fp = fp->next;
     }
     if (!found)
         cout << "No file of that name exists" << endl;
@@ -253,8 +252,8 @@ Directory *Directory::get_dir(string dir_name)
 
 void Directory::mkdir()
 {
-    int ch, exit = 0;
-    string dir_name;
+    int exit = 0;
+    string ch, dir_name;
 
     while (!exit)
     {
@@ -265,10 +264,9 @@ void Directory::mkdir()
         cout << "4. Show files and directories (in detail) inside here" << endl;
         cout << "5. Go back to start" << endl;
         cin >> ch;
+        transform(ch.begin(), ch.end(), ch.begin(), ::toupper);
 
-        switch (ch)
-        {
-        case 1:
+        if (ch == "CD")
         {
             cout << "Enter name of directory to create : ";
             cin.ignore();
@@ -284,8 +282,7 @@ void Directory::mkdir()
                 cout << "Directory of that name already exists" << endl;
             break;
         }
-
-        case 2:
+        else if (ch == "SWD")
         {
             cout << "Enter the name of the directory you want to switch to : ";
             cin.ignore();
@@ -300,23 +297,14 @@ void Directory::mkdir()
             break;
         }
 
-        case 3:
-        {
+        else if (ch == "SFD")
             ls();
-            break;
-        }
-        case 4:
-        {
+        else if (ch == "SFDD")
             ls_la();
-            break;
-        }
-        case 5:
-        {
+        else if (ch == "B")
             exit = 1;
-            break;
-        }
-
-        default:
+        else
+        {
             cout << "Please enter the correct choice" << endl;
         }
     }
@@ -404,17 +392,16 @@ void Directory::ls()
         return;
     }
     File *fp = fp_start;
-    while (fp_start)
+    while (fp)
     {
-        cout << fp_start->name << endl;
-        fp_start = fp_start->next;
+        cout << fp->name << endl;
+        fp = fp->next;
     }
     for (i = 0; i < dirs.size(); i++)
     {
         cout << dirs.size() << endl;
         cout << dirs[i]->name << endl;
     }
-    fp_start = fp;
 }
 
 void Directory::ls_la()
@@ -426,10 +413,10 @@ void Directory::ls_la()
         return;
     }
     File *fp = fp_start;
-    while (fp_start)
+    while (fp)
     {
-        cout << fp_start->name << "  --  " << fp_start->size << "kb" << endl;
-        fp_start = fp_start->next;
+        cout << fp->name << "  --  " << fp->size << "kb" << endl;
+        fp = fp->next;
     }
     for (i = 0; i < dirs.size(); i++)
     {
