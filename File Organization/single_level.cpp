@@ -35,13 +35,13 @@ void display_options();
 
 int main()
 {
-    cout << "Single Level File Organization Technique Simulation" << endl
-         << endl;
+    cout << "Single Level File Organization Technique Simulation" << endl;
     Directory dir;
 
     int ch = 100;
     while (ch)
     {
+        cout << endl;
         display_options();
         cin >> ch;
         switch (ch)
@@ -62,8 +62,7 @@ int main()
             ch = 0;
             break;
         default:
-            cout << endl
-                 << "Please enter the correct choice" << endl;
+            cout << "Please enter the correct choice" << endl;
         }
     }
 }
@@ -87,8 +86,10 @@ bool Directory::file_exists(string file_name)
     {
         while (fp_start)
         {
-            if (fp_start->name.compare(file_name) == 0)
+            if (fp_start->name.compare(file_name) == 0) {
+                fp_start = fp;
                 return true;
+            } 
             fp_start = fp_start->next;
         }
     }

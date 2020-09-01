@@ -12,16 +12,18 @@ struct File
     File *next;
 };
 
-class UFD
+class Directory
 {
-    // User File Directory
 private:
     File *fp_start;
     File *fp_end;
     int file_count;
 
+    string name;
+    vector<Directory *> dirs;
+
 public:
-    UFD()
+    Directory()
     {
         fp_start = nullptr;
         fp_end = nullptr;
@@ -33,13 +35,18 @@ public:
     void rm();
     void ls();
     void ls_la();
+
+    bool dir_exists(string dir_name);
+    Directory *get_dir(string dir_name);
+    void mkdir();
+    void rmdir();
 };
 
 struct User
 {
     int id;
     string name;
-    UFD dir;
+    Directory ufd; // User file directory
 };
 
 class MFD
@@ -62,7 +69,7 @@ void show_UFD_options();
 
 int main()
 {
-    cout << "Two Level File Organization Technique Simulation" << endl;
+    cout << "Hierarchical File Organization Technique Simulation" << endl;
     MFD mfd;
     User *user;
 
@@ -72,7 +79,8 @@ int main()
         cout << endl;
         show_MFD_options();
         show_UFD_options();
-        cout << "[Q] Quit" << endl;
+        cout << "[Q] Quit" << endl
+             << endl;
 
         cin >> ch;
         transform(ch.begin(), ch.end(), ch.begin(), ::toupper);
@@ -83,7 +91,7 @@ int main()
             mfd.remove_user();
         else if (ch == "SU")
             mfd.show_users();
-        else if (ch == "CF" || ch == "RF" || ch == "SF" || ch == "SFD")
+        else if (ch == "CF" || ch == "RF" || ch == "CD" || ch == "RD" || ch == "SFD" || ch == "SFDD")
         {
             if (mfd.user_count() == 0)
             {
@@ -98,13 +106,17 @@ int main()
             {
                 cout << "ID : " << user->id << " | Name : " << user->name << endl;
                 if (ch == "CF")
-                    user->dir.touch();
+                    user->ufd.touch();
                 else if (ch == "RF")
-                    user->dir.rm();
-                else if (ch == "SF")
-                    user->dir.ls();
+                    user->ufd.rm();
+                else if (ch == "CD")
+                    user->ufd.mkdir();
+                else if (ch == "RD")
+                    user->ufd.rmdir();
                 else if (ch == "SFD")
-                    user->dir.ls_la();
+                    user->ufd.ls();
+                else if (ch == "SFDD")
+                    user->ufd.ls_la();
             }
         }
         else if (ch == "Q")
@@ -118,11 +130,13 @@ void show_UFD_options()
 {
     cout << "[CF] Create file | ";
     cout << "[RF] Remove file | ";
-    cout << "[SF] Show all files | ";
-    cout << "[SFD] Show all files in detail" << endl;
+    cout << "[CD] Create directory | ";
+    cout << "[RD] Remove directory | ";
+    cout << "[SFD] Show files & directories | " << endl;
+    cout << "[SFDD] Show files & directories in detail" << endl;
 }
 
-bool UFD::file_exists(string file_name)
+bool Directory::file_exists(string file_name)
 {
     File *fp = fp_start;
 
@@ -140,7 +154,7 @@ bool UFD::file_exists(string file_name)
     return false;
 }
 
-void UFD::touch()
+void Directory::touch()
 {
     string file_name;
     cout << "Enter file name : ";
@@ -151,8 +165,7 @@ void UFD::touch()
     {
         File *new_file = new File;
         new_file->name = file_name;
-        cout << endl
-             << "Enter file size : ";
+        cout << "Enter file size : ";
         cin >> new_file->size;
         if (file_count == 0)
         {
@@ -180,7 +193,7 @@ void UFD::touch()
     }
 }
 
-void UFD::rm()
+void Directory::rm()
 {
     if (file_count == 0)
     {
@@ -216,9 +229,176 @@ void UFD::rm()
         fp_start = fp_end = nullptr;
 }
 
-void UFD::ls()
+bool Directory::dir_exists(string dir_name)
 {
-    if (file_count == 0)
+    int i;
+    for (i = 0; i < dirs.size(); i++)
+    {
+        if (dirs[i]->name.compare(dir_name) == 0)
+            return true;
+    }
+    return false;
+}
+
+Directory *Directory::get_dir(string dir_name)
+{
+    int i;
+    for (i = 0; i < dirs.size(); i++)
+    {
+        if (dirs[i]->name.compare(dir_name) == 0)
+            return dirs[i];
+    }
+    return nullptr;
+}
+
+void Directory::mkdir()
+{
+    int ch, exit = 0;
+    string dir_name;
+
+    while (!exit)
+    {
+        cout << endl;
+        cout << "1. Create directory inside here" << endl;
+        cout << "2. Switch to another directory inside here" << endl;
+        cout << "3. Show files and directories inside here" << endl;
+        cout << "4. Show files and directories (in detail) inside here" << endl;
+        cout << "5. Go back to start" << endl;
+        cin >> ch;
+
+        switch (ch)
+        {
+        case 1:
+        {
+            cout << "Enter name of directory to create : ";
+            cin.ignore();
+            getline(cin, dir_name);
+            if (!dir_exists(dir_name))
+            {
+                Directory *new_dir = new Directory;
+                new_dir->name = dir_name;
+                dirs.push_back(new_dir);
+                cout << "Directory created successfully!" << endl;
+            }
+            else
+                cout << "Directory of that name already exists" << endl;
+            break;
+        }
+
+        case 2:
+        {
+            cout << "Enter the name of the directory you want to switch to : ";
+            cin.ignore();
+            getline(cin, dir_name);
+            if (dir_exists(dir_name))
+            {
+                Directory *switched_dir = get_dir(dir_name);
+                switched_dir->mkdir();
+            }
+            else
+                cout << "No directory of that name exists" << endl;
+            break;
+        }
+
+        case 3:
+        {
+            ls();
+            break;
+        }
+        case 4:
+        {
+            ls_la();
+            break;
+        }
+        case 5:
+        {
+            exit = 1;
+            break;
+        }
+
+        default:
+            cout << "Please enter the correct choice" << endl;
+        }
+    }
+}
+
+void Directory::rmdir()
+{
+    int i, ch, exit = 0;
+    int found = 0;
+
+    string dir_name;
+
+    while (!exit)
+    {
+        cout << "1. Remove directory inside here" << endl;
+        cout << "2. Switch to another directory inside here" << endl;
+        cout << "3. Show files and directories inside here" << endl;
+        cout << "4. Show files and directories (in detail) inside here" << endl;
+        cout << "5. Go back to start" << endl;
+        cin >> ch;
+
+        switch (ch)
+        {
+        case 1:
+        {
+            Directory *new_dir = new Directory;
+            cout << "Enter name of directory to remove : ";
+            cin.ignore();
+            getline(cin, dir_name);
+            for (i = 0; i < dirs.size(); i++)
+            {
+                if (dirs[i]->name.compare(dir_name) == 0)
+                {
+                    dirs.erase(dirs.begin() + i);
+                }
+            }
+            if (!found)
+                cout << "No directory of that name exists" << endl;
+            break;
+        }
+
+        case 2:
+        {
+            cout << "Enter name of directory you want to switch to : ";
+            cin.ignore();
+            getline(cin, dir_name);
+            if (dir_exists(dir_name))
+            {
+                Directory *switched_dir = get_dir(dir_name);
+                switched_dir->rmdir();
+            }
+            else
+                cout << "No directory of that name exists" << endl;
+            break;
+        }
+
+        case 3:
+        {
+            ls();
+            break;
+        }
+        case 4:
+        {
+            ls_la();
+            break;
+        }
+        case 5:
+        {
+            exit = 1;
+            break;
+        }
+
+        default:
+            cout << "Please enter the correct choice" << endl;
+        }
+    }
+}
+
+void Directory::ls()
+{
+    int i;
+    if (file_count + dirs.size() == 0)
     {
         cout << "Empty directory" << endl;
         return;
@@ -229,12 +409,18 @@ void UFD::ls()
         cout << fp_start->name << endl;
         fp_start = fp_start->next;
     }
+    for (i = 0; i < dirs.size(); i++)
+    {
+        cout << dirs.size() << endl;
+        cout << dirs[i]->name << endl;
+    }
     fp_start = fp;
 }
 
-void UFD::ls_la()
+void Directory::ls_la()
 {
-    if (file_count == 0)
+    int i;
+    if (file_count + dirs.size() == 0)
     {
         cout << "Empty directory" << endl;
         return;
@@ -245,7 +431,11 @@ void UFD::ls_la()
         cout << fp_start->name << "  --  " << fp_start->size << "kb" << endl;
         fp_start = fp_start->next;
     }
-    fp_start = fp;
+    for (i = 0; i < dirs.size(); i++)
+    {
+        cout << dirs[i]->name << endl;
+        dirs[i]->ls_la();
+    }
 }
 
 void show_MFD_options()
@@ -281,7 +471,6 @@ void MFD::create_user()
         cin.ignore();
         getline(cin, new_user->name);
         users.push_back(new_user);
-
         cout << "User created successfully!" << endl;
     }
     else
