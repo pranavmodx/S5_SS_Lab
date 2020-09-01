@@ -85,15 +85,14 @@ bool Directory::file_exists(string file_name)
 
     if (file_count > 0)
     {
-        while (fp_start)
+        while (fp)
         {
-            if (fp_start->name.compare(file_name) == 0)
+            if (fp->name.compare(file_name) == 0)
                 return true;
-            fp_start = fp_start->next;
+            fp = fp ->next;
         }
     }
 
-    fp_start = fp;
     return false;
 }
 
