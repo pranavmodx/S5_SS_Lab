@@ -258,11 +258,14 @@ void Directory::mkdir()
     while (!exit)
     {
         cout << endl;
-        cout << "1. Create directory inside here" << endl;
-        cout << "2. Switch to another directory inside here" << endl;
-        cout << "3. Show files and directories inside here" << endl;
-        cout << "4. Show files and directories (in detail) inside here" << endl;
-        cout << "5. Go back to start" << endl;
+        cout << "You are inside ";
+        name.size() == 0 ? cout << "root user" : cout << name;
+        cout << " directory" << endl;
+        cout << "[SFD] Show files and directories | ";
+        cout << "[SFDD] Show files and directories (in detail) | ";
+        cout << "[CD] Create directory | ";
+        cout << "[SWD] Switch to another directory | ";
+        cout << "[B] Go back" << endl;
         cin >> ch;
         transform(ch.begin(), ch.end(), ch.begin(), ::toupper);
 
@@ -280,7 +283,6 @@ void Directory::mkdir()
             }
             else
                 cout << "Directory of that name already exists" << endl;
-            break;
         }
         else if (ch == "SWD")
         {
@@ -294,7 +296,6 @@ void Directory::mkdir()
             }
             else
                 cout << "No directory of that name exists" << endl;
-            break;
         }
 
         else if (ch == "SFD")
@@ -312,23 +313,24 @@ void Directory::mkdir()
 
 void Directory::rmdir()
 {
-    int i, ch, exit = 0;
-    int found = 0;
-
-    string dir_name;
+    int i, exit = 0, found;
+    string ch, dir_name;
 
     while (!exit)
     {
-        cout << "1. Remove directory inside here" << endl;
-        cout << "2. Switch to another directory inside here" << endl;
-        cout << "3. Show files and directories inside here" << endl;
-        cout << "4. Show files and directories (in detail) inside here" << endl;
-        cout << "5. Go back to start" << endl;
+        cout << endl;
+        cout << "You are inside ";
+        name.size() == 0 ? cout << "root user" : cout << name;
+        cout << " directory" << endl;
+        cout << "[SFD] Show files and directories | ";
+        cout << "[SFDD] Show files and directories (in detail) | ";
+        cout << "[RD] Remove directory | ";
+        cout << "[SWD] Switch to another directory | ";
+        cout << "[B] Go back" << endl;
         cin >> ch;
+        transform(ch.begin(), ch.end(), ch.begin(), ::toupper);
 
-        switch (ch)
-        {
-        case 1:
+        if (ch == "RD")
         {
             Directory *new_dir = new Directory;
             cout << "Enter name of directory to remove : ";
@@ -338,15 +340,17 @@ void Directory::rmdir()
             {
                 if (dirs[i]->name.compare(dir_name) == 0)
                 {
+                    found = 1;
                     dirs.erase(dirs.begin() + i);
                 }
             }
-            if (!found)
+            if (found = 1)
+            {
                 cout << "No directory of that name exists" << endl;
-            break;
+                found = 0;
+            }
         }
-
-        case 2:
+        else if (ch == "SWD")
         {
             cout << "Enter name of directory you want to switch to : ";
             cin.ignore();
@@ -358,28 +362,15 @@ void Directory::rmdir()
             }
             else
                 cout << "No directory of that name exists" << endl;
-            break;
         }
-
-        case 3:
-        {
+        else if (ch == "SFD")
             ls();
-            break;
-        }
-        case 4:
-        {
+        else if (ch == "SFDD")
             ls_la();
-            break;
-        }
-        case 5:
-        {
+        else if (ch == "B")
             exit = 1;
-            break;
-        }
-
-        default:
+        else
             cout << "Please enter the correct choice" << endl;
-        }
     }
 }
 
