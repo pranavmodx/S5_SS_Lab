@@ -1,7 +1,5 @@
 #include <iostream>
 #include <vector>
-#include <ctype.h>
-#include <algorithm>
 
 using namespace std;
 
@@ -84,19 +82,19 @@ int main()
         cout << endl;
         mfd.show_MFD_options();
         show_dir_options();
-        cout << "[Q] Quit" << endl
+        cout << "[q] Quit" << endl
              << endl;
 
-        cin >> ch;
-        transform(ch.begin(), ch.end(), ch.begin(), ::toupper);
+        cin.ignore();
+        getline(cin, ch);
 
-        if (ch == "CU")
+        if (ch == "cu")
             mfd.create_user();
-        else if (ch == "RU")
+        else if (ch == "ru")
             mfd.remove_user();
-        else if (ch == "SU")
+        else if (ch == "su")
             mfd.show_users();
-        else if (ch == "CF" || ch == "RF" || ch == "CD" || ch == "RD" || ch == "SFD" || ch == "SFDD")
+        else if (ch == "touch" || ch == "rm" || ch == "mkdir" || ch == "rmdir" || ch == "ls" || ch == "ls_la")
         {
             if (mfd.user_count() == 0)
             {
@@ -110,21 +108,21 @@ int main()
             else
             {
                 cout << "ID : " << user->id << " | Name : " << user->name << endl;
-                if (ch == "CF")
+                if (ch == "touch")
                     user->ufd.touch();
-                else if (ch == "RF")
+                else if (ch == "rm")
                     user->ufd.rm();
-                else if (ch == "CD")
+                else if (ch == "mkdir")
                     user->ufd.mkdir();
-                else if (ch == "RD")
+                else if (ch == "rmdir")
                     user->ufd.rmdir();
-                else if (ch == "SFD")
+                else if (ch == "ls")
                     user->ufd.ls();
-                else if (ch == "SFDD")
+                else if (ch == "ls_la")
                     user->ufd.ls_la();
             }
         }
-        else if (ch == "Q")
+        else if (ch == "q")
             break;
         else
             cout << "Please enter the correct choice!" << endl;
@@ -133,20 +131,20 @@ int main()
 
 void show_dir_options()
 {
-    cout << "[CF] Create file | ";
-    cout << "[RF] Remove file | ";
-    cout << "[CD] Create directory | ";
-    cout << "[RD] Remove directory | ";
-    cout << "[SFD] Show files & directories | " << endl;
-    cout << "[SFDD] Show files & directories in detail" << endl;
+    cout << "[touch] Create file | ";
+    cout << "[rm] Remove file | ";
+    cout << "[mkdir] Create directory | ";
+    cout << "[rmdir] Remove directory | ";
+    cout << "[ls] Show files & directories | " << endl;
+    cout << "[ls_la] Show files & directories in detail" << endl;
 }
 
 void Directory::show_more_dir_options()
 {
-    cout << "[SWD] Switch to another directory | ";
-    cout << "[SFD] Show files and directories | ";
-    cout << "[SFDD] Show files and directories (in detail) | ";
-    cout << "[B] Go back" << endl;
+    cout << "[cd] Switch to another directory | ";
+    cout << "[ls] Show files and directories | ";
+    cout << "[ls_la] Show files and directories (in detail) | ";
+    cout << "[~] Go back" << endl;
 }
 
 bool Directory::file_exists(string file_name)
@@ -177,12 +175,12 @@ void Directory::touch()
         cout << "You are inside ";
         name.size() == 0 ? cout << "root user" : cout << name;
         cout << " directory" << endl;
-        cout << "[CF] Create file | " << endl;
+        cout << "[touch] Create file | " << endl;
         show_more_dir_options();
-        cin >> ch;
-        transform(ch.begin(), ch.end(), ch.begin(), ::toupper);
+        cin.ignore();
+        getline(cin, ch);
 
-        if (ch == "CF")
+        if (ch == "touch")
         {
             cout << "Enter file name : ";
             cin.ignore();
@@ -218,7 +216,7 @@ void Directory::touch()
             else
                 cout << "File with the same name already exists!" << endl;
         }
-        else if (ch == "SWD")
+        else if (ch == "cd")
         {
             cout << "Enter the name of the directory you want to switch to : ";
             cin.ignore();
@@ -231,11 +229,11 @@ void Directory::touch()
             else
                 cout << "No directory of that name exists" << endl;
         }
-        else if (ch == "SFD")
+        else if (ch == "ls")
             ls();
-        else if (ch == "SFDD")
+        else if (ch == "ls_la")
             ls_la();
-        else if (ch == "B")
+        else if (ch == "~")
             exit = 1;
         else
             cout << "Please enter the correct choice" << endl;
@@ -253,12 +251,12 @@ void Directory::rm()
         cout << "You are inside ";
         name.size() == 0 ? cout << "root user" : cout << name;
         cout << " directory" << endl;
-        cout << "[RF] Remove file | " << endl;
+        cout << "[rm] Remove file | " << endl;
         show_more_dir_options();
-        cin >> ch;
-        transform(ch.begin(), ch.end(), ch.begin(), ::toupper);
+        cin.ignore();
+        getline(cin, ch);
 
-        if (ch == "RF")
+        if (ch == "rm")
         {
             if (file_count == 0)
             {
@@ -303,7 +301,7 @@ void Directory::rm()
 
             cout << "No file of that name exists" << endl;
         }
-        else if (ch == "SWD")
+        else if (ch == "cd")
         {
             cout << "Enter the name of the directory you want to switch to : ";
             cin.ignore();
@@ -316,11 +314,11 @@ void Directory::rm()
             else
                 cout << "No directory of that name exists" << endl;
         }
-        else if (ch == "SFD")
+        else if (ch == "ls")
             ls();
-        else if (ch == "SFDD")
+        else if (ch == "ls_la")
             ls_la();
-        else if (ch == "B")
+        else if (ch == "~")
             exit = 1;
         else
             cout << "Please enter the correct choice" << endl;
@@ -360,12 +358,12 @@ void Directory::mkdir()
         cout << "You are inside ";
         name.size() == 0 ? cout << "root user" : cout << name;
         cout << " directory" << endl;
-        cout << "[CD] Create directory | ";
+        cout << "[mkdir] Create directory | ";
         show_more_dir_options();
-        cin >> ch;
-        transform(ch.begin(), ch.end(), ch.begin(), ::toupper);
+        cin.ignore();
+        getline(cin, ch);
 
-        if (ch == "CD")
+        if (ch == "mkdir")
         {
             cout << "Enter name of directory to create : ";
             cin.ignore();
@@ -380,7 +378,7 @@ void Directory::mkdir()
             else
                 cout << "Directory of that name already exists" << endl;
         }
-        else if (ch == "SWD")
+        else if (ch == "cd")
         {
             cout << "Enter the name of the directory you want to switch to : ";
             cin.ignore();
@@ -394,11 +392,11 @@ void Directory::mkdir()
                 cout << "No directory of that name exists" << endl;
         }
 
-        else if (ch == "SFD")
+        else if (ch == "ls")
             ls();
-        else if (ch == "SFDD")
+        else if (ch == "ls_la")
             ls_la();
-        else if (ch == "B")
+        else if (ch == "~")
             exit = 1;
         else
             cout << "Please enter the correct choice" << endl;
@@ -416,12 +414,12 @@ void Directory::rmdir()
         cout << "You are inside ";
         name.size() == 0 ? cout << "root user" : cout << name;
         cout << " directory" << endl;
-        cout << "[RD] Remove directory | ";
+        cout << "[rmdir] Remove directory | ";
         show_more_dir_options();
-        cin >> ch;
-        transform(ch.begin(), ch.end(), ch.begin(), ::toupper);
+        cin.ignore();
+        getline(cin, ch);
 
-        if (ch == "RD")
+        if (ch == "rmdir")
         {
             Directory *new_dir = new Directory;
             cout << "Enter name of directory to remove : ";
@@ -441,7 +439,7 @@ void Directory::rmdir()
                 found = 0;
             }
         }
-        else if (ch == "SWD")
+        else if (ch == "cd")
         {
             cout << "Enter name of directory you want to switch to : ";
             cin.ignore();
@@ -454,11 +452,11 @@ void Directory::rmdir()
             else
                 cout << "No directory of that name exists" << endl;
         }
-        else if (ch == "SFD")
+        else if (ch == "ls")
             ls();
-        else if (ch == "SFDD")
+        else if (ch == "ls_la")
             ls_la();
-        else if (ch == "B")
+        else if (ch == "~")
             exit = 1;
         else
             cout << "Please enter the correct choice" << endl;
@@ -511,9 +509,9 @@ void Directory::ls_la()
 
 void MFD::show_MFD_options()
 {
-    cout << "[CU] Create user | ";
-    cout << "[RU] Remove user | ";
-    cout << "[SU] Show users" << endl;
+    cout << "[cu] Create user | ";
+    cout << "[ru] Remove user | ";
+    cout << "[su] Show users" << endl;
 }
 
 bool MFD::user_exists(int id)

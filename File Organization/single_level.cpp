@@ -38,42 +38,39 @@ int main()
     cout << "Single Level File Organization Technique Simulation" << endl;
     Directory dir;
 
-    int ch = 100;
-    while (ch)
+    string ch;
+    cin.ignore();
+    getline(cin, ch);
+
+    while (1)
     {
         display_options();
-        cin >> ch;
-        switch (ch)
-        {
-        case 1:
+        cin.ignore();
+        getline(cin, ch);
+
+        if (ch == "ls")
             dir.ls();
-            break;
-        case 2:
+        else if (ch == "ls_la")
             dir.ls_la();
-            break;
-        case 3:
+        else if (ch == "touch")
             dir.touch();
-            break;
-        case 4:
+        else if (ch == "rm")
             dir.rm();
+        else if (ch == "q" || ch == "Q")
             break;
-        case 5:
-            ch = 0;
-            break;
-        default:
+        else
             cout << "Please enter the correct choice" << endl;
-        }
     }
 }
 
 void display_options()
 {
     cout << endl
-         << "1. Show files" << endl;
-    cout << "2. Show files in detail" << endl;
-    cout << "3. Create file" << endl;
-    cout << "4. Remove file" << endl;
-    cout << "5. Quit" << endl
+         << "[ls] Show files" << endl;
+    cout << "[ls_la] Show files in detail" << endl;
+    cout << "[touch] Create file" << endl;
+    cout << "[rm] Remove file" << endl;
+    cout << "[q] Quit" << endl
          << endl;
 }
 

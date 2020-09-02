@@ -1,7 +1,5 @@
 #include <iostream>
 #include <vector>
-#include <ctype.h>
-#include <algorithm>
 
 using namespace std;
 
@@ -75,18 +73,18 @@ int main()
         cout << endl;
         mfd.show_MFD_options();
         show_UFD_options();
-        cout << "[Q] Quit" << endl;
+        cout << "[q] Quit" << endl;
 
-        cin >> ch;
-        transform(ch.begin(), ch.end(), ch.begin(), ::toupper);
+        cin.ignore();
+        getline(cin, ch);
 
-        if (ch == "CU")
+        if (ch == "cu")
             mfd.create_user();
-        else if (ch == "RU")
+        else if (ch == "ru")
             mfd.remove_user();
-        else if (ch == "SU")
+        else if (ch == "su")
             mfd.show_users();
-        else if (ch == "CF" || ch == "RF" || ch == "SF" || ch == "SFD")
+        else if (ch == "touch" || ch == "rm" || ch == "ls" || ch == "ls_la")
         {
             if (mfd.user_count() == 0)
             {
@@ -100,17 +98,17 @@ int main()
             else
             {
                 cout << "ID : " << user->id << " | Name : " << user->name << endl;
-                if (ch == "CF")
+                if (ch == "touch")
                     user->dir.touch();
-                else if (ch == "RF")
+                else if (ch == "rm")
                     user->dir.rm();
-                else if (ch == "SF")
+                else if (ch == "ls")
                     user->dir.ls();
-                else if (ch == "SFD")
+                else if (ch == "ls_la")
                     user->dir.ls_la();
             }
         }
-        else if (ch == "Q")
+        else if (ch == "q")
             break;
         else
             cout << "Please enter the correct choice!" << endl;
@@ -119,10 +117,10 @@ int main()
 
 void show_UFD_options()
 {
-    cout << "[CF] Create file | ";
-    cout << "[RF] Remove file | ";
-    cout << "[SF] Show all files | ";
-    cout << "[SFD] Show all files in detail" << endl;
+    cout << "[touch] Create file | ";
+    cout << "[rm] Remove file | ";
+    cout << "[ls] Show all files | ";
+    cout << "[ls_la] Show all files in detail" << endl;
 }
 
 bool UFD::file_exists(string file_name)
@@ -153,8 +151,7 @@ void UFD::touch()
     {
         File *new_file = new File;
         new_file->name = file_name;
-        cout << endl
-             << "Enter file size : ";
+        cout << "Enter file size : ";
         cin >> new_file->size;
         if (file_count == 0)
         {
@@ -260,9 +257,9 @@ void UFD::ls_la()
 
 void MFD::show_MFD_options()
 {
-    cout << "[CU] Create user | ";
-    cout << "[RU] Remove user | ";
-    cout << "[SU] Show users" << endl;
+    cout << "[cu] Create user | ";
+    cout << "[ru] Remove user | ";
+    cout << "[su] Show users" << endl;
 }
 
 bool MFD::user_exists(int id)
