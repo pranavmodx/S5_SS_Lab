@@ -30,13 +30,14 @@ public:
         file_count = 0;
     }
 
+    void show_file_options();
     bool file_exists(string file_name);
     void touch();
     void rm();
     void ls();
     void ls_la();
 
-    void show_dir_options();
+    void show_more_options();
     bool dir_exists(string dir_name);
     void mkdir();
     void rmdir();
@@ -140,7 +141,7 @@ void show_UFD_options()
     cout << "[SFDD] Show files & directories in detail" << endl;
 }
 
-void Directory::show_dir_options()
+void Directory::show_more_options()
 {
     cout << "[SWD] Switch to another directory | ";
     cout << "[SFD] Show files and directories | ";
@@ -167,87 +168,163 @@ bool Directory::file_exists(string file_name)
 
 void Directory::touch()
 {
-    string file_name;
-    cout << "Enter file name : ";
-    cin.ignore();
-    getline(cin, file_name);
+    int exit = 0;
+    string ch, file_name, dir_name;
 
-    if (!file_exists(file_name))
+    while (!exit)
     {
-        File *new_file = new File;
-        new_file->name = file_name;
-        cout << "Enter file size : ";
-        cin >> new_file->size;
-        if (file_count == 0)
+        cout << endl;
+        cout << "You are inside ";
+        name.size() == 0 ? cout << "root user" : cout << name;
+        cout << " directory" << endl;
+        cout << "[CF] Create file | " << endl;
+        show_more_options();
+        cin >> ch;
+        transform(ch.begin(), ch.end(), ch.begin(), ::toupper);
+
+        if (ch == "CF")
         {
-            fp_start = new_file;
-            fp_start->next = nullptr;
+            cout << "Enter file name : ";
+            cin.ignore();
+            getline(cin, file_name);
+
+            if (!file_exists(file_name))
+            {
+                File *new_file = new File;
+                new_file->name = file_name;
+                cout << "Enter file size : ";
+                cin >> new_file->size;
+
+                if (file_count == 0)
+                {
+                    fp_start = new_file;
+                    fp_start->next = nullptr;
+                }
+                else if (file_count == 1)
+                {
+                    fp_end = new_file;
+                    fp_end->next = nullptr;
+                    fp_start->next = fp_end;
+                }
+                else
+                {
+                    fp_end->next = new_file;
+                    fp_end = new_file;
+                    fp_end->next = nullptr;
+                }
+                file_count++;
+                cout << "File created successfully!" << endl;
+            }
+            else
+                cout << "File with the same name already exists!" << endl;
         }
-        else if (file_count == 1)
+        else if (ch == "SWD")
         {
-            fp_end = new_file;
-            fp_end->next = nullptr;
-            fp_start->next = fp_end;
+            cout << "Enter the name of the directory you want to switch to : ";
+            cin.ignore();
+            getline(cin, dir_name);
+            if (dir_exists(dir_name))
+            {
+                Directory *switched_dir = get_dir(dir_name);
+                switched_dir->mkdir();
+            }
+            else
+                cout << "No directory of that name exists" << endl;
         }
+        else if (ch == "SFD")
+            ls();
+        else if (ch == "SFDD")
+            ls_la();
+        else if (ch == "B")
+            exit = 1;
         else
-        {
-            fp_end->next = new_file;
-            fp_end = new_file;
-            fp_end->next = nullptr;
-        }
-        file_count++;
-        cout << "File created successfully!" << endl;
-    }
-    else
-    {
-        cout << "File with the same name already exists!" << endl;
+            cout << "Please enter the correct choice" << endl;
     }
 }
 
 void Directory::rm()
 {
-    if (file_count == 0)
+    int exit = 0;
+    string ch, file_name, dir_name;
+
+    while (!exit)
     {
-        cout << "There are no files to delete!" << endl;
-        return;
+        cout << endl;
+        cout << "You are inside ";
+        name.size() == 0 ? cout << "root user" : cout << name;
+        cout << " directory" << endl;
+        cout << "[RF] Remove file | " << endl;
+        show_more_options();
+        cin >> ch;
+        transform(ch.begin(), ch.end(), ch.begin(), ::toupper);
+
+        if (ch == "RF")
+        {
+            if (file_count == 0)
+            {
+                cout << "There are no files to delete!" << endl;
+                return;
+            }
+
+            File *fp = fp_start, *fp2 = fp_start;
+            string file_name;
+
+            cout << "Enter the name of the file to delete : ";
+            cin.ignore();
+            getline(cin, file_name);
+
+            // If first file matches
+            if (fp->name.compare(file_name) == 0)
+            {
+                file_count--;
+                fp_start = fp->next;
+                delete fp;
+                file_count--;
+                cout << "Deleted file successfully!" << endl;
+                return;
+            }
+
+            // Backup fp previous to file to be deleted
+            while (fp && fp->name.compare(file_name) != 0)
+            {
+                fp2 = fp;
+                fp = fp->next;
+            }
+
+            // If file found, then it won't be null
+            if (fp)
+            {
+                fp2->next = fp->next;
+                delete fp;
+                file_count--;
+                cout << "Deleted file successfully!" << endl;
+                return;
+            }
+
+            cout << "No file of that name exists" << endl;
+        }
+        else if (ch == "SWD")
+        {
+            cout << "Enter the name of the directory you want to switch to : ";
+            cin.ignore();
+            getline(cin, dir_name);
+            if (dir_exists(dir_name))
+            {
+                Directory *switched_dir = get_dir(dir_name);
+                switched_dir->mkdir();
+            }
+            else
+                cout << "No directory of that name exists" << endl;
+        }
+        else if (ch == "SFD")
+            ls();
+        else if (ch == "SFDD")
+            ls_la();
+        else if (ch == "B")
+            exit = 1;
+        else
+            cout << "Please enter the correct choice" << endl;
     }
-
-    File *fp = fp_start, *fp2 = fp_start;
-    string file_name;
-
-    cout << "Enter the name of the file to delete : ";
-    cin.ignore();
-    getline(cin, file_name);
-
-    // If first file matches
-    if (fp->name.compare(file_name) == 0)
-    {
-        file_count--;
-        fp_start = fp->next;
-        delete fp;
-        file_count--;
-        cout << "Deleted file successfully!" << endl;
-        return;
-    }
-
-    // Backup fp previous to file to be deleted
-    while (fp && fp->name.compare(file_name) != 0)
-    {
-        fp2 = fp;
-        fp = fp->next;
-    }
-
-    // If file found, then it won't be null
-    if (fp)
-    {
-        fp2->next = fp->next;
-        delete fp;
-        file_count--;
-        cout << "Deleted file successfully!" << endl;
-        return;
-    }
-
-    cout << "No file of that name exists" << endl;
 }
 
 bool Directory::dir_exists(string dir_name)
@@ -284,7 +361,7 @@ void Directory::mkdir()
         name.size() == 0 ? cout << "root user" : cout << name;
         cout << " directory" << endl;
         cout << "[CD] Create directory | ";
-        show_dir_options();
+        show_more_options();
         cin >> ch;
         transform(ch.begin(), ch.end(), ch.begin(), ::toupper);
 
@@ -324,9 +401,7 @@ void Directory::mkdir()
         else if (ch == "B")
             exit = 1;
         else
-        {
             cout << "Please enter the correct choice" << endl;
-        }
     }
 }
 
@@ -342,7 +417,7 @@ void Directory::rmdir()
         name.size() == 0 ? cout << "root user" : cout << name;
         cout << " directory" << endl;
         cout << "[RD] Remove directory | ";
-        show_dir_options();
+        show_more_options();
         cin >> ch;
         transform(ch.begin(), ch.end(), ch.begin(), ::toupper);
 
@@ -360,7 +435,7 @@ void Directory::rmdir()
                     sub_dirs.erase(sub_dirs.begin() + i);
                 }
             }
-            if (found = 1)
+            if (found == 1)
             {
                 cout << "No directory of that name exists" << endl;
                 found = 0;
@@ -401,13 +476,13 @@ void Directory::ls()
     File *fp = fp_start;
     while (fp)
     {
-        cout << fp->name << endl;
+        cout << fp->name << "  --  " << fp->size << "kb" << endl;
         fp = fp->next;
     }
     for (i = 0; i < sub_dirs.size(); i++)
     {
-        cout << sub_dirs.size() << endl;
-        cout << sub_dirs[i]->name << endl;
+        cout << sub_dirs[i]->name << "  --  "
+             << "dir" << endl;
     }
 }
 
@@ -427,7 +502,9 @@ void Directory::ls_la()
     }
     for (i = 0; i < sub_dirs.size(); i++)
     {
-        cout << sub_dirs[i]->name << endl;
+        cout << sub_dirs[i]->name << "  --  "
+             << "dir" << endl;
+        cout << "sub dirs & files of " << sub_dirs[i]->name << " : " << endl;
         sub_dirs[i]->ls_la();
     }
 }
