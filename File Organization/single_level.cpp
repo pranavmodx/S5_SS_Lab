@@ -41,7 +41,6 @@ int main()
     int ch = 100;
     while (ch)
     {
-        cout << endl;
         display_options();
         cin >> ch;
         switch (ch)
@@ -88,7 +87,7 @@ bool Directory::file_exists(string file_name)
         {
             if (fp->name.compare(file_name) == 0)
                 return true;
-            fp = fp ->next;
+            fp = fp->next;
         }
     }
 
@@ -142,32 +141,42 @@ void Directory::rm()
         return;
     }
 
-    File *fp = fp_start;
+    File *fp = fp_start, *fp2 = fp_start;
     string file_name;
-    cout << "Enter the name of file to delete : ";
+
+    cout << "Enter the name of the file to delete : ";
     cin.ignore();
     getline(cin, file_name);
-    int found = 0;
 
-    File *temp;
-    while (fp)
+    // If first file matches
+    if (fp->name.compare(file_name) == 0)
     {
-        if (fp->name.compare(file_name) == 0)
-        {
-            found = 1;
-            file_count--;
-            temp = fp;
-            cout << "Deleted file successfully!" << endl;
-        }
+        file_count--;
+        fp_start = fp->next;
+        delete fp;
+        file_count--;
+        cout << "Deleted file successfully!" << endl;
+        return;
+    }
+
+    // Backup fp previous to file to be deleted
+    while (fp && fp->name.compare(file_name) != 0)
+    {
+        fp2 = fp;
         fp = fp->next;
     }
-    if (!found)
-        cout << "No file of that name exists" << endl;
-    else
-        delete temp;
 
-    if (file_count == 0)
-        fp_start = fp_end = nullptr;
+    // If file found, then it won't be null
+    if (fp)
+    {
+        fp2->next = fp->next;
+        delete fp;
+        file_count--;
+        cout << "Deleted file successfully!" << endl;
+        return;
+    }
+
+    cout << "No file of that name exists" << endl;
 }
 
 void Directory::ls()
