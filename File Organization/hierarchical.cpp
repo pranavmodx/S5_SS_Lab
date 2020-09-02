@@ -37,14 +37,14 @@ public:
     void ls();
     void ls_la();
 
-    void show_more_options();
+    void show_more_dir_options();
     bool dir_exists(string dir_name);
     void mkdir();
     void rmdir();
     Directory *get_dir(string dir_name);
 };
 
-void show_UFD_options();
+void show_dir_options();
 
 struct User
 {
@@ -83,7 +83,7 @@ int main()
     {
         cout << endl;
         mfd.show_MFD_options();
-        show_UFD_options();
+        show_dir_options();
         cout << "[Q] Quit" << endl
              << endl;
 
@@ -131,7 +131,7 @@ int main()
     }
 }
 
-void show_UFD_options()
+void show_dir_options()
 {
     cout << "[CF] Create file | ";
     cout << "[RF] Remove file | ";
@@ -141,7 +141,7 @@ void show_UFD_options()
     cout << "[SFDD] Show files & directories in detail" << endl;
 }
 
-void Directory::show_more_options()
+void Directory::show_more_dir_options()
 {
     cout << "[SWD] Switch to another directory | ";
     cout << "[SFD] Show files and directories | ";
@@ -178,7 +178,7 @@ void Directory::touch()
         name.size() == 0 ? cout << "root user" : cout << name;
         cout << " directory" << endl;
         cout << "[CF] Create file | " << endl;
-        show_more_options();
+        show_more_dir_options();
         cin >> ch;
         transform(ch.begin(), ch.end(), ch.begin(), ::toupper);
 
@@ -254,7 +254,7 @@ void Directory::rm()
         name.size() == 0 ? cout << "root user" : cout << name;
         cout << " directory" << endl;
         cout << "[RF] Remove file | " << endl;
-        show_more_options();
+        show_more_dir_options();
         cin >> ch;
         transform(ch.begin(), ch.end(), ch.begin(), ::toupper);
 
@@ -361,7 +361,7 @@ void Directory::mkdir()
         name.size() == 0 ? cout << "root user" : cout << name;
         cout << " directory" << endl;
         cout << "[CD] Create directory | ";
-        show_more_options();
+        show_more_dir_options();
         cin >> ch;
         transform(ch.begin(), ch.end(), ch.begin(), ::toupper);
 
@@ -417,7 +417,7 @@ void Directory::rmdir()
         name.size() == 0 ? cout << "root user" : cout << name;
         cout << " directory" << endl;
         cout << "[RD] Remove directory | ";
-        show_more_options();
+        show_more_dir_options();
         cin >> ch;
         transform(ch.begin(), ch.end(), ch.begin(), ::toupper);
 
