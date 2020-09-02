@@ -49,15 +49,18 @@ private:
     vector<User *> users;
 
 public:
+    void show_MFD_options();
+
     bool user_exists(int id);
+    int user_count();
+
     void create_user();
     void remove_user();
     void show_users();
-    int user_count();
+
     User *get_user();
 };
 
-void show_MFD_options();
 void show_UFD_options();
 
 int main()
@@ -70,7 +73,7 @@ int main()
     while (1)
     {
         cout << endl;
-        show_MFD_options();
+        mfd.show_MFD_options();
         show_UFD_options();
         cout << "[Q] Quit" << endl;
 
@@ -245,7 +248,7 @@ void UFD::ls_la()
     }
 }
 
-void show_MFD_options()
+void MFD::show_MFD_options()
 {
     cout << "[CU] Create user | ";
     cout << "[RU] Remove user | ";

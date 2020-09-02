@@ -30,18 +30,17 @@ public:
         file_count = 0;
     }
 
-    void show_dir_options();
-
     bool file_exists(string file_name);
     void touch();
     void rm();
     void ls();
     void ls_la();
 
+    void show_dir_options();
     bool dir_exists(string dir_name);
-    Directory *get_dir(string dir_name);
     void mkdir();
     void rmdir();
+    Directory *get_dir(string dir_name);
 };
 
 void show_UFD_options();
@@ -63,10 +62,12 @@ public:
     void show_MFD_options();
 
     bool user_exists(int id);
+    int user_count();
+
     void create_user();
     void remove_user();
     void show_users();
-    int user_count();
+
     User *get_user();
 };
 
