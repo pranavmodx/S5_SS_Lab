@@ -20,7 +20,7 @@ private:
     int file_count;
 
     string name;
-    vector<Directory *> dirs;
+    vector<Directory *> sub_dirs;
 
 public:
     Directory()
@@ -253,9 +253,9 @@ void Directory::rm()
 bool Directory::dir_exists(string dir_name)
 {
     int i;
-    for (i = 0; i < dirs.size(); i++)
+    for (i = 0; i < sub_dirs.size(); i++)
     {
-        if (dirs[i]->name.compare(dir_name) == 0)
+        if (sub_dirs[i]->name.compare(dir_name) == 0)
             return true;
     }
     return false;
@@ -264,10 +264,10 @@ bool Directory::dir_exists(string dir_name)
 Directory *Directory::get_dir(string dir_name)
 {
     int i;
-    for (i = 0; i < dirs.size(); i++)
+    for (i = 0; i < sub_dirs.size(); i++)
     {
-        if (dirs[i]->name.compare(dir_name) == 0)
-            return dirs[i];
+        if (sub_dirs[i]->name.compare(dir_name) == 0)
+            return sub_dirs[i];
     }
     return nullptr;
 }
@@ -297,7 +297,7 @@ void Directory::mkdir()
             {
                 Directory *new_dir = new Directory;
                 new_dir->name = dir_name;
-                dirs.push_back(new_dir);
+                sub_dirs.push_back(new_dir);
                 cout << "Directory created successfully!" << endl;
             }
             else
@@ -352,12 +352,12 @@ void Directory::rmdir()
             cout << "Enter name of directory to remove : ";
             cin.ignore();
             getline(cin, dir_name);
-            for (i = 0; i < dirs.size(); i++)
+            for (i = 0; i < sub_dirs.size(); i++)
             {
-                if (dirs[i]->name.compare(dir_name) == 0)
+                if (sub_dirs[i]->name.compare(dir_name) == 0)
                 {
                     found = 1;
-                    dirs.erase(dirs.begin() + i);
+                    sub_dirs.erase(sub_dirs.begin() + i);
                 }
             }
             if (found = 1)
@@ -393,7 +393,7 @@ void Directory::rmdir()
 void Directory::ls()
 {
     int i;
-    if (file_count + dirs.size() == 0)
+    if (file_count + sub_dirs.size() == 0)
     {
         cout << "Empty directory" << endl;
         return;
@@ -404,17 +404,17 @@ void Directory::ls()
         cout << fp->name << endl;
         fp = fp->next;
     }
-    for (i = 0; i < dirs.size(); i++)
+    for (i = 0; i < sub_dirs.size(); i++)
     {
-        cout << dirs.size() << endl;
-        cout << dirs[i]->name << endl;
+        cout << sub_dirs.size() << endl;
+        cout << sub_dirs[i]->name << endl;
     }
 }
 
 void Directory::ls_la()
 {
     int i;
-    if (file_count + dirs.size() == 0)
+    if (file_count + sub_dirs.size() == 0)
     {
         cout << "Empty directory" << endl;
         return;
@@ -425,10 +425,10 @@ void Directory::ls_la()
         cout << fp->name << "  --  " << fp->size << "kb" << endl;
         fp = fp->next;
     }
-    for (i = 0; i < dirs.size(); i++)
+    for (i = 0; i < sub_dirs.size(); i++)
     {
-        cout << dirs[i]->name << endl;
-        dirs[i]->ls_la();
+        cout << sub_dirs[i]->name << endl;
+        sub_dirs[i]->ls_la();
     }
 }
 
