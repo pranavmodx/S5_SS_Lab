@@ -30,6 +30,8 @@ public:
         file_count = 0;
     }
 
+    void show_dir_options();
+
     bool file_exists(string file_name);
     void touch();
     void rm();
@@ -41,6 +43,8 @@ public:
     void mkdir();
     void rmdir();
 };
+
+void show_UFD_options();
 
 struct User
 {
@@ -56,6 +60,8 @@ private:
     vector<User *> users;
 
 public:
+    void show_MFD_options();
+
     bool user_exists(int id);
     void create_user();
     void remove_user();
@@ -63,9 +69,6 @@ public:
     int user_count();
     User *get_user();
 };
-
-void show_MFD_options();
-void show_UFD_options();
 
 int main()
 {
@@ -77,7 +80,7 @@ int main()
     while (1)
     {
         cout << endl;
-        show_MFD_options();
+        mfd.show_MFD_options();
         show_UFD_options();
         cout << "[Q] Quit" << endl
              << endl;
@@ -134,6 +137,14 @@ void show_UFD_options()
     cout << "[RD] Remove directory | ";
     cout << "[SFD] Show files & directories | " << endl;
     cout << "[SFDD] Show files & directories in detail" << endl;
+}
+
+void Directory::show_dir_options()
+{
+    cout << "[SWD] Switch to another directory | ";
+    cout << "[SFD] Show files and directories | ";
+    cout << "[SFDD] Show files and directories (in detail) | ";
+    cout << "[B] Go back" << endl;
 }
 
 bool Directory::file_exists(string file_name)
@@ -261,11 +272,8 @@ void Directory::mkdir()
         cout << "You are inside ";
         name.size() == 0 ? cout << "root user" : cout << name;
         cout << " directory" << endl;
-        cout << "[SFD] Show files and directories | ";
-        cout << "[SFDD] Show files and directories (in detail) | ";
         cout << "[CD] Create directory | ";
-        cout << "[SWD] Switch to another directory | ";
-        cout << "[B] Go back" << endl;
+        show_dir_options();
         cin >> ch;
         transform(ch.begin(), ch.end(), ch.begin(), ::toupper);
 
@@ -322,11 +330,8 @@ void Directory::rmdir()
         cout << "You are inside ";
         name.size() == 0 ? cout << "root user" : cout << name;
         cout << " directory" << endl;
-        cout << "[SFD] Show files and directories | ";
-        cout << "[SFDD] Show files and directories (in detail) | ";
         cout << "[RD] Remove directory | ";
-        cout << "[SWD] Switch to another directory | ";
-        cout << "[B] Go back" << endl;
+        show_dir_options();
         cin >> ch;
         transform(ch.begin(), ch.end(), ch.begin(), ::toupper);
 
@@ -416,7 +421,7 @@ void Directory::ls_la()
     }
 }
 
-void show_MFD_options()
+void MFD::show_MFD_options()
 {
     cout << "[CU] Create user | ";
     cout << "[RU] Remove user | ";
